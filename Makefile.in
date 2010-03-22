@@ -34,14 +34,17 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-target_triplet = @target@
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
-	ChangeLog INSTALL NEWS config.guess config.sub depcomp \
-	install-sh ltmain.sh missing
+	ChangeLog INSTALL NEWS build-aux/config.guess \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/ltmain.sh build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -73,11 +76,15 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-libmsilbc_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libmsilbc_la_OBJECTS = ilbc.lo
+libmsilbc_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+am_libmsilbc_la_OBJECTS = libmsilbc_la-ilbc.lo
 libmsilbc_la_OBJECTS = $(am_libmsilbc_la_OBJECTS)
+libmsilbc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libmsilbc_la_CFLAGS) \
+	$(CFLAGS) $(libmsilbc_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -107,7 +114,6 @@ distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AR = @AR@
-ARCH = @ARCH@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -126,9 +132,6 @@ ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
-EPM = @EPM@
-EPMINSTALL = @EPMINSTALL@
-EPM_PKG_EXT = @EPM_PKG_EXT@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
@@ -144,7 +147,6 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
-LICENSE = @LICENSE@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
@@ -152,18 +154,18 @@ MAKEINFO = @MAKEINFO@
 MEDIASTREAMER_CFLAGS = @MEDIASTREAMER_CFLAGS@
 MEDIASTREAMER_LIBS = @MEDIASTREAMER_LIBS@
 MKDIR_P = @MKDIR_P@
-MKEPMLIST = @MKEPMLIST@
+MSILBC_CFLAGS = @MSILBC_CFLAGS@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+ORTP_CFLAGS = @ORTP_CFLAGS@
+ORTP_LIBS = @ORTP_LIBS@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
-PACKAGER = @PACKAGER@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
-PACKAGE_PLUGINS_DIR = @PACKAGE_PLUGINS_DIR@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
@@ -171,15 +173,10 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
-RELEASE = @RELEASE@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-SUMMARY = @SUMMARY@
-SYS_GROUP = @SYS_GROUP@
-SYS_USER = @SYS_USER@
-VENDOR = @VENDOR@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -229,20 +226,19 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
-target = @target@
 target_alias = @target_alias@
-target_cpu = @target_cpu@
-target_os = @target_os@
-target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = ilbc-rfc3951.tar.gz
-plugindir = $(PACKAGE_PLUGINS_DIR)
+ACLOCAL_AMFLAGS = -I m4
+plugindir = $(libdir)/mediastreamer/plugins
 plugin_LTLIBRARIES = libmsilbc.la
 libmsilbc_la_SOURCES = ilbc.c
-libmsilbc_la_LIBADD = $(ILBC_LIBS)
-AM_CFLAGS = $(ILBC_CFLAGS)
+libmsilbc_la_CFLAGS = $(ORTP_CFLAGS) $(MEDIASTREAMER_CFLAGS) $(ILBC_CFLAGS) \
+	$(MSILBC_CFLAGS)
+
+libmsilbc_la_LIBADD = $(ORTP_LIBS) $(MEDIASTREAMER_LIBS) $(ILBC_LIBS)
+libmsilbc_la_LDFLAGS = -module
 all: all-am
 
 .SUFFIXES:
@@ -313,7 +309,7 @@ clean-pluginLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libmsilbc.la: $(libmsilbc_la_OBJECTS) $(libmsilbc_la_DEPENDENCIES) 
-	$(LINK) -rpath $(plugindir) $(libmsilbc_la_OBJECTS) $(libmsilbc_la_LIBADD) $(LIBS)
+	$(libmsilbc_la_LINK) -rpath $(plugindir) $(libmsilbc_la_OBJECTS) $(libmsilbc_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -321,7 +317,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ilbc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmsilbc_la-ilbc.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -343,6 +339,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+libmsilbc_la-ilbc.lo: ilbc.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmsilbc_la_CFLAGS) $(CFLAGS) -MT libmsilbc_la-ilbc.lo -MD -MP -MF $(DEPDIR)/libmsilbc_la-ilbc.Tpo -c -o libmsilbc_la-ilbc.lo `test -f 'ilbc.c' || echo '$(srcdir)/'`ilbc.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libmsilbc_la-ilbc.Tpo $(DEPDIR)/libmsilbc_la-ilbc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ilbc.c' object='libmsilbc_la-ilbc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libmsilbc_la_CFLAGS) $(CFLAGS) -c -o libmsilbc_la-ilbc.lo `test -f 'ilbc.c' || echo '$(srcdir)/'`ilbc.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

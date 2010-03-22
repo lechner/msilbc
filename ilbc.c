@@ -18,9 +18,15 @@ typedef struct EncState{
 
 static void enc_init(MSFilter *f){
 	EncState *s=ms_new(EncState,1);
+#ifdef USE_30MS_PACKETS
+	s->nsamples=BLOCKL_30MS;
+	s->nbytes=NO_OF_BYTES_30MS;
+	s->ms_per_frame=30;
+#else
 	s->nsamples=BLOCKL_20MS;
 	s->nbytes=NO_OF_BYTES_20MS;
 	s->ms_per_frame=20;
+#endif
 	s->ptime=0;
 	s->ts=0;
 	ms_bufferizer_init(&s->bufferizer);
