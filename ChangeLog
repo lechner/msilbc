@@ -1,3 +1,12 @@
+2010-03-25  Not Available  <none@none.net>
+
+	* Made 20 frames the standard and changed the defined name to
+	USE_20MS_FRAMES.  Also changed the documentation.
+
+	* Added the option '--enable-20ms-frames' to configure.ac
+
+	* Changed version number to 2.0.3
+
 2010-03-22  Not Available  <(none)>
 
 	* Made using 30ms packages optional in enc_init() with

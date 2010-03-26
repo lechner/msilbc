@@ -1,2 +1,2 @@
-This package can now use 30ms packets as well.  Please look at the
-README file for configuration.
+This package can now use 20ms or 30ms frames.  Please look at README
+for details.
